@@ -1,5 +1,4 @@
 import React from 'react';
-import {Dropdown, DropdownButton} from 'react-bootstrap';
 import {
   COUNTRY_LIST,
   NATIONALITIES_LIST,
@@ -58,6 +57,8 @@ export default class Form extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     console.log('handleSubmit');
+    console.log(this.state);
+    console.log(formValid(this.state));
     if (formValid(this.state)) {
       let {
         firstName,
@@ -73,6 +74,7 @@ export default class Form extends React.Component {
       dob = dob.slice(2).replace('/', '');
       passExpDate = passExpDate.slice(2).replace('/', '');
       sex = sex[0].toUpperCase();
+      countryOfIssue = countryOfIssue.slice(0, 3).toUpperCase();
 
       const res = mrz(dmzType, 'P', lastName, firstName, passportNumber,
           countryOfIssue,
@@ -186,6 +188,24 @@ export default class Form extends React.Component {
     return !(dtPED < minDate || dtPED > maxDate);
   };
 
+  handleSelectCountry = e => {
+    this.setState({countryOfIssue: e.target.value});
+    console.log(this.state.countryOfIssue);
+  };
+
+  handleSelectNat = e => {
+    this.setState({nationality: e.target.value});
+  };
+
+    handleSelectSex = e => {
+      this.setState({sex: e.target.value});
+      console.log(this.state.sex);
+    };
+
+    handleSelectMRZ = e => {
+        this.setState({dmzType: e.target.value});
+    };
+
   render() {
     const {formErrors} = this.state;
     return (
@@ -206,8 +226,7 @@ export default class Form extends React.Component {
                          noValidate
                   />
                   {formErrors.firstNameError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.firstNameError}</p>
+                      <p className="errorMessage">{formErrors.firstNameError}</p>
                   )}
                 </div>
                 <div className="lastName row">
@@ -223,8 +242,7 @@ export default class Form extends React.Component {
                            noValidate
                     />
                     {formErrors.lastNameError.length > 0 && (
-                        <p
-                            className="errorMessage">{formErrors.lastNameError}</p>
+                        <p className="errorMessage">{formErrors.lastNameError}</p>
                     )}</div>
                 </div>
                 <div className="dob">
@@ -238,8 +256,7 @@ export default class Form extends React.Component {
                          noValidate
                   />
                   {formErrors.dobError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.dobError}</p>
+                      <p className="errorMessage">{formErrors.dobError}</p>
                   )}
                 </div>
                 <div className="passportNumber">
@@ -254,8 +271,7 @@ export default class Form extends React.Component {
                          noValidate
                   />
                   {formErrors.passNumError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.passNumError}</p>
+                      <p className="errorMessage">{formErrors.passNumError}</p>
                   )}
                 </div>
                 <div className="personalNumber">
@@ -270,8 +286,7 @@ export default class Form extends React.Component {
                          noValidate
                   />
                   {formErrors.passNumError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.personalNumber}</p>
+                      <p className="errorMessage">{formErrors.personalNumber}</p>
                   )}
                 </div>
                 <div className="passExpDate">
@@ -285,122 +300,72 @@ export default class Form extends React.Component {
                          noValidate
                   />
                   {formErrors.passExpDateError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.passExpDateError}</p>
+                      <p className="errorMessage">{formErrors.passExpDateError}</p>
                   )}
                 </div>
-                <div
-                    className="countryOfIssue row justify-content-between mt-2 col-12">
-                  <label>Select country: </label>
-                  <DropdownButton className='mb-2 dropdownButton'
-                                  id="dropdown-item-button"
-                                  title={this.state.countryOfIssue ||
-                                  'Country of Issue'}>
-                    {
-                      COUNTRY_LIST.map((country, i) => {
-                        return <Dropdown.Item key={i} as="button"
-                                              onClick={() => {
-                                                this.setState((state) => {
-                                                  return {
-                                                    ...state,
-                                                    countryOfIssue: country.slice(
-                                                        0, 3).toUpperCase(),
-                                                  };
-                                                });
-                                              }}>{country}</Dropdown.Item>;
-                      })
-                    }
-                  </DropdownButton>
+                <div className="countryOfIssue row justify-content-between mt-2 col-12">
+                    <select value={this.state.countryOfIssue || 'Select country of issue'}
+                            onChange={this.handleSelectCountry}
+                            className='col-12 form-control'>
+                        {
+                            COUNTRY_LIST.map((country, i) => {
+                                return <option key={i} as="button">{country}</option>;
+                            })
+                        }
+                    </select>
                   {formErrors.countryError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.countryError}</p>
+                      <p className="errorMessage">{formErrors.countryError}</p>
                   )}
                 </div>
 
-                <div
-                    className="nationality row justify-content-between mt-2 col-12">
-                  <label>Select nationality: </label>
-                  <DropdownButton className='mb-2 dropdownButton'
-                                  id="dropdown-item-button"
-                                  title={this.state.nationality ||
-                                  'Nationality'}>
+                <div className="nationality row justify-content-between mt-2 col-12">
+                    <select value={this.state.nationality || 'Nationality'}
+                            onChange={this.handleSelectNat}
+                            className='col-12 form-control'>
                     {
                       NATIONALITIES_LIST.map((nationality, i) => {
-                        return <Dropdown.Item key={i} as="button"
-                                              onClick={() => {
-                                                this.setState((state) => {
-                                                  return {
-                                                    ...state,
-                                                    nationality: nationality,
-                                                  };
-                                                });
-                                              }}>{nationality}</Dropdown.Item>;
+                        return <option key={i} as="button">{nationality}</option>;
                       })
                     }
-                  </DropdownButton>
+                  </select>
                   {formErrors.nationError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.nationError}</p>
+                      <p className="errorMessage">{formErrors.nationError}</p>
                   )}
                 </div>
 
-                <div
-                    className="sex row justify-content-between mt-2 col-12">
-                  <label>Sex: </label>
-                  <DropdownButton className='mb-2 dropdownButton'
-                                  id="dropdown-item-button"
-                                  title={this.state.sex ||
-                                  'Sex'}>
+                <div className="sex row justify-content-between mt-2 col-12">
+                    <select value={this.state.sex || 'Sex'}
+                            onChange={this.handleSelectSex}
+                            className='col-12 form-control'>
                     {
                       SEX_TYPE.map((sex, i) => {
-                        return <Dropdown.Item key={i} as="button"
-                                              onClick={() => {
-                                                this.setState((state) => {
-                                                  return {
-                                                    ...state,
-                                                    sex: sex,
-                                                  };
-                                                });
-                                              }}>{sex}</Dropdown.Item>;
+                        return <option key={i} as="button">{sex}</option>;
                       })
                     }
-                  </DropdownButton>
+                    </select>
                   {formErrors.nationError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.nationError}</p>
+                      <p className="errorMessage">{formErrors.nationError}</p>
                   )}
                 </div>
 
-                <div
-                    className="dmzType row justify-content-between mt-2 col-12">
-                  <label>Type mrz: </label>
-                  <DropdownButton className='mb-2 dropdownButton'
-                                  id="dropdown-item-button"
-                                  title={this.state.dmzType ||
-                                  'Type mrz'}>
+                <div className="dmzType row mt-2 col-12">
+                    <select value={this.state.dmzType || 'MRZ Type'}
+                            onChange={this.handleSelectMRZ}
+                            className='col-12 form-control'>
                     {
                       MRZ_TYPE.map((type, i) => {
-                        return <Dropdown.Item key={i} as="button"
-                                              onClick={() => {
-                                                this.setState((state) => {
-                                                  return {
-                                                    ...state,
-                                                    dmzType: type,
-                                                  };
-                                                });
-                                              }}>{type}</Dropdown.Item>;
+                        return <option key={i} as="button">{type}</option>;
                       })
                     }
-                  </DropdownButton>
+                  </select>
                   {formErrors.nationError.length > 0 && (
-                      <p
-                          className="errorMessage">{formErrors.nationError}</p>
+                      <p className="errorMessage">{formErrors.nationError}</p>
                   )}
                 </div>
 
 
-                <div className="createAccount mt-2">
-                  <input className='btn btn-success' value='Create Account'
+                <div className="createCode mt-2">
+                  <input className='btn btn-success' value='Create Code'
                          type="submit"/>
                 </div>
               </form>

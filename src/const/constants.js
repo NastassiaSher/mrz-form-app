@@ -1,4 +1,5 @@
 export const COUNTRY_LIST = [
+  'Select Country',
   'Afghanistan',
   'Albania',
   'Algeria',
@@ -221,6 +222,7 @@ export const COUNTRY_LIST = [
   ];
   
 export const NATIONALITIES_LIST = [
+  'Select nationality',
   'Afghan',
   'Albanian',
   'Algerian',
@@ -416,6 +418,6 @@ export const NATIONALITIES_LIST = [
   'Zimbabwean'
   ];
   
-export const SEX_TYPE = ['MAN', 'WOMAN'];
+export const SEX_TYPE = ['Select Sex','MAN', 'WOMAN'];
   
-export const MRZ_TYPE = ['TD1', 'TD2', 'TD3'];
+export const MRZ_TYPE = ['Select type','TD1', 'TD2', 'TD3'];
